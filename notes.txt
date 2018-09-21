@@ -1,0 +1,12 @@
+clone git repo
+	git clone https://github.com/rofallar/hds_workshop.git
+	
+create python virtual environment (in project directory)
+	python -m venv venv_dnac
+	venv_dnac\Scripts\activate.bat
+
+add python requirments
+	pip install -r requirments.txt
+	
+
+	
