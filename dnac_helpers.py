@@ -85,15 +85,17 @@ def get_trunk_port_status_by_ip(ipaddress):
     return result
 
 
-def get_port_status(id, port_type):
+def get_port_status(id, port_type, port_status=[]):
     interfaces = get_url("interface/network-device/%s" % id)
 
     interface_response = interfaces['response']
     result = "Port status:\r\n"
 
-    key_value_list = port_type
+    port_type_list = port_type
+    ports = [d for d in interface_response if d['portMode'] in port_type_list]
 
-    ports = [d for d in interface_response if d['portMode'] in key_value_list]
+    if port_status.__len__() > 0:
+        ports = [d for d in ports if d['status'] in port_status]
 
     for interface in ports:
         result += 'Port %s(%s) has a status of %s\r\n' % \

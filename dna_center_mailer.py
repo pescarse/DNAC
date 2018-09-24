@@ -26,10 +26,10 @@ if __name__ == "__main__":
     #filter out only Switches and Hubs
     switches = [d for d in all_devices if d['family'] == 'Switches and Hubs']
 
-    #build email message body with details trunk ports of each switch
+    #build email message body with details ports of each switch
     for this_switch in switches:
         msg += "Details of " + this_switch['hostname'] + "\r\n"
-        msg += dnac_helpers.get_port_status(this_switch['id'], ['trunk', 'routed']) + "\r\n\n"
+        msg += dnac_helpers.get_port_status(this_switch['id'], ['trunk', 'routed'], ['down']) + "\r\n\n"
 
 
     smtp_server = create_smtp_server()
