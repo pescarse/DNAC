@@ -217,7 +217,7 @@
 					"response": []
 				},
 				{
-					"name": "getDeviceById",
+					"name": "getInterfacesById",
 					"request": {
 						"method": "GET",
 						"header": [
