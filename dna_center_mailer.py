@@ -1,22 +1,29 @@
 import dnac_helpers
 from messaging_helper import *
-import getopt, sys, env_lab
+import getopt, sys
+import argparse
 
 if __name__ == "__main__":
 
     #parse input options
-    argv = sys.argv[1:]
+    parser = argparse.ArgumentParser(description="Collect port details from DNA Center")
+    parser.add_argument('email_destination', help='email to send report results')
+    parser.add_argument('-s', '--status', nargs='+', help='port status')
+    parser.add_argument('-t', '--type', nargs='+', help='port type')
+    parser.add_argument('--print', action='store_true', help='Print to screen, do not send email')
 
-    opts, args = getopt.getopt(argv, "d:", ["destination="])
-    email_destination = ""
-    for opt, arg in opts:
-        if opt in ['-d', '--destination']:
-            email_destination = arg
+    args = parser.parse_args()
+    email_destination = args.email_destination
 
-    if email_destination == "":
-        print("An email destination is required")
-        sys.exit(0)
+    if args.status:
+        port_status = args.status
+    else:
+        port_status = []
 
+    if args.type:
+        port_type = args.type
+    else:
+        port_type = []
 
 
     #go find all network devices in DNAC
@@ -29,11 +36,14 @@ if __name__ == "__main__":
     #build email message body with details ports of each switch
     for this_switch in switches:
         msg += "Details of " + this_switch['hostname'] + "\r\n"
-        msg += dnac_helpers.get_port_status(this_switch['id'], ['trunk', 'routed'], ['down']) + "\r\n\n"
+        msg += dnac_helpers.get_port_status(this_switch['id'], port_type, port_status) + "\r\n\n"
 
 
     smtp_server = create_smtp_server()
     email_message = create_message(email_destination, 'DNA Center Alert', message=msg)
 
-    smtp_server.send_message(email_message)
+    if args.print:
+        print(email_message)
+    else:
+        smtp_server.send_message(email_message)
 
