@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "35b78e95-949a-4ed5-9fc3-1aa2366207a3",
+		"name": "DNAC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1.Ticket",
+			"item": [
+				{
+					"name": "postAuthTokenRequest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"token\", data.Token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46R3JhcGV2aW5lMQ=="
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{dnac}}:{{port}}/api/system/v1/auth/token",
+							"protocol": "https",
+							"host": [
+								"{{dnac}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"system",
+								"v1",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "postAuthTokenRequest",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "content-type",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic YWRtaW46R3JhcGV2aW5lMQ==",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://{{dnac}}:{{port}}/api/system/v1/auth/token",
+									"protocol": "https",
+									"host": [
+										"{{dnac}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"system",
+										"v1",
+										"auth",
+										"token"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Connection",
+									"value": "keep-alive",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Length",
+									"value": "344",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 24 Sep 2018 16:43:05 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "webserver",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000; includeSubDomains",
+									"name": "Strict-Transport-Security",
+									"description": "A HSTS Policy informing the HTTP client how long to cache the HTTPS only policy and whether this applies to subdomains."
+								},
+								{
+									"key": "Via",
+									"value": "api-gateway",
+									"name": "Via",
+									"description": "Informs the client of proxies through which the response was sent."
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (Eastern Standard Time)",
+									"httpOnly": true,
+									"domain": "live.cisco.com",
+									"path": "/apic-em-inventory-manager-service/",
+									"secure": false,
+									"value": "17A22A6BED234F9E11B3DF8189A437D0",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": "{\"Token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjE3MTdhNTA0YTM1MTAwODkwMjgxMTEiLCJhdXRoU291cmNlIjoiaW50ZXJuYWwiLCJ0ZW5hbnROYW1lIjoiVE5UMCIsInJvbGVzIjpbIjViMTYxYzExMDRhMzUxMDA4OTAyNzQzNiJdLCJ0ZW5hbnRJZCI6IjViMTYxYzBmMDRhMzUxMDA4OTAyNzQyZiIsImV4cCI6MTUzNzgxMDk4NSwidXNlcm5hbWUiOiJkZW1vIn0.zvastqtq9UalV_mqIMLDqMgSedJIwMe_3lVkbNJzois\"}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "2.Network Device",
+			"item": [
+				{
+					"name": "getDeviceList",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{dnac}}:{{port}}/api/v1/network-device/",
+							"protocol": "https",
+							"host": [
+								"{{dnac}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"network-device",
+								""
+							]
+						},
+						"description": "This request uses the \"token\" variable generated from the POST request to get first 14 network-devices"
+					},
+					"response": []
+				},
+				{
+					"name": "getDeviceById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{dnac}}:{{port}}/api/v1/interface/network-device/{{deviceId}}",
+							"protocol": "https",
+							"host": [
+								"{{dnac}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"interface",
+								"network-device",
+								"{{deviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getDeviceByIp",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{dnac}}:{{port}}/api/v1/network-device/ip-address/{{deviceIpAddress}}",
+							"protocol": "https",
+							"host": [
+								"{{dnac}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"v1",
+								"network-device",
+								"ip-address",
+								"{{deviceIpAddress}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
