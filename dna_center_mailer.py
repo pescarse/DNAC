@@ -8,12 +8,15 @@ if __name__ == "__main__":
     argv = sys.argv[1:]
 
     opts, args = getopt.getopt(argv, "d:", ["destination="])
-
+    email_destination = ""
     for opt, arg in opts:
-        if opt in ['-d', '-destination']:
+        if opt in ['-d', '--destination']:
             email_destination = arg
-        else:
-            email_destination = env_lab.email_destination
+
+    if email_destination == "":
+        print("An email destination is required")
+        sys.exit(0)
+
 
 
     #go find all network devices in DNAC
