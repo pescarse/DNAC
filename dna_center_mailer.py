@@ -1,6 +1,5 @@
 import dnac_helpers
 from messaging_helper import *
-import getopt, sys
 import argparse
 
 if __name__ == "__main__":
@@ -15,15 +14,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
     email_destination = args.email_destination
 
-    if args.status:
-        port_status = args.status
-    else:
-        port_status = []
+    port_status = args.status if args.status else []
+    #Different ways to write if statements
+    #if args.status: port_status = args.status
+    #else: port_status = []
 
-    if args.type:
-        port_type = args.type
-    else:
-        port_type = []
+    port_type = args.type if args.type else []
+    #Different ways to write if statements
+    #if args.type:
+    #    port_type = args.type
+    #else:
+    #    port_type = []
 
 
     #go find all network devices in DNAC
