@@ -39,7 +39,7 @@ if __name__ == "__main__":
     else:
         switches = all_devices
 
-        
+
     #build email message body with details ports of each switch
     for this_switch in switches:
         msg += "Details of " + this_switch['hostname'] + "\r\n"

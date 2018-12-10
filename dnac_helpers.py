@@ -2,10 +2,10 @@
 import sys
 import requests
 from requests.auth import HTTPBasicAuth
-requests.packages.urllib3.disable_warnings()
+# requests.packages.urllib3.disable_warnings()
 
 
-import env_lab      # noqa
+import env_lab
 
 DNAC = env_lab.DNA_CENTER['host']
 DNAC_USER = env_lab.DNA_CENTER['username']
@@ -22,7 +22,7 @@ def get_auth_token(controller_ip=DNAC, username=DNAC_USER, password=DNAC_PASSWOR
     """
 
     login_url = "https://{0}:{1}/api/system/v1/auth/token".format(controller_ip, DNAC_PORT)
-    result = requests.post(url=login_url, auth=HTTPBasicAuth(DNAC_USER, DNAC_PASSWORD), verify=False)
+    result = requests.post(url=login_url, auth=HTTPBasicAuth(username, password), verify=False)
     result.raise_for_status()
 
     token = result.json()["Token"]
@@ -44,11 +44,11 @@ def get_url(url):
     url = create_url(path=url)
     print(url)
     token = get_auth_token()
-    headers = {'X-auth-token' : token['token']}
+    headers = {'X-auth-token': token['token']}
     try:
         response = requests.get(url, headers=headers, verify=False)
-    except requests.exceptions.RequestException as cerror:
-        print("Error processing request", cerror)
+    except requests.exceptions.RequestException as c_error:
+        print("Error processing request", c_error)
         sys.exit(1)
 
     return response.json()
@@ -64,29 +64,29 @@ def get_device_id(ip_address):
     return device['response']['id']
 
 
-def get_interfaces_by_ip(ipaddress):
-    dev_id = get_device_id(ipaddress)
+def get_interfaces_by_ip(ip_address):
+    dev_id = get_device_id(ip_address)
     interfaces = get_url("interface/network-device/%s" % dev_id)
     interface_response = interfaces['response']
     return interface_response
 
 
-def get_trunk_port_status_by_ip(ipaddress):
-    dev_id = get_device_id(ipaddress)
+def get_trunk_port_status_by_ip(ip_address):
+    dev_id = get_device_id(ip_address)
     interfaces = get_url("interface/network-device/%s" % dev_id)
 
     interface_response = interfaces['response']
     result = "Trunk port status\r\n\n"
-    for int in interface_response:
-        if(int['portMode'] == 'trunk'):
-            result += 'Trunk port %s has current status of %s \r\n' % (int['portName'],int['status'])
-        if (int['portMode'] == 'routed'):
-            result += 'Routed port %s has current status of %s \r\n' % (int['portName'], int['status'])
+    for interface in interface_response:
+        if interface['portMode'] == 'trunk':
+            result += 'Trunk port %s has current status of %s \r\n' % (interface['portName'], interface['status'])
+        if interface['portMode'] == 'routed':
+            result += 'Routed port %s has current status of %s \r\n' % (interface['portName'], interface['status'])
     return result
 
 
-def get_port_status(id, port_type, port_status):
-    interfaces = get_url("interface/network-device/%s" % id)
+def get_port_status(port_id, port_type, port_status):
+    interfaces = get_url("interface/network-device/%s" % port_id)
 
     ports = interfaces['response']
     result = "Port status:\r\n"
@@ -99,6 +99,6 @@ def get_port_status(id, port_type, port_status):
 
     for interface in ports:
         result += 'Port %s(%s) has a status of %s\r\n' % \
-                  (interface['portName'],interface['portMode'],interface['status'])
+                  (interface['portName'], interface['portMode'], interface['status'])
 
     return result
