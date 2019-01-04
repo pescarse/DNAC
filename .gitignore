@@ -1,5 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
-venv_*/
+venv/
 env_lab.py
 .idea/
 __pycache__/
