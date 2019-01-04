@@ -20,4 +20,3 @@ def create_message(recipient, subject, message, sender=env_lab.email_user):
     msg['Subject'] = subject
     msg.attach(MIMEText(message, 'plain'))
     return msg
-
