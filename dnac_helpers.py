@@ -22,7 +22,7 @@ def get_auth_token(controller_ip=DNAC, username=DNAC_USER, password=DNAC_PASSWOR
     """
 
     login_url = "https://{0}:{1}/api/system/v1/auth/token".format(controller_ip, DNAC_PORT)
-    result = requests.post(url=login_url, auth=HTTPBasicAuth(username, password), verify=False)
+    result = requests.post(url=login_url, auth=HTTPBasicAuth(username, password))
     result.raise_for_status()
 
     token = result.json()["Token"]
@@ -46,7 +46,7 @@ def get_url(url):
     token = get_auth_token()
     headers = {'X-auth-token': token['token']}
     try:
-        response = requests.get(url, headers=headers, verify=False)
+        response = requests.get(url, headers=headers)
     except requests.exceptions.RequestException as c_error:
         print("Error processing request", c_error)
         sys.exit(1)
