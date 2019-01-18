@@ -3,20 +3,23 @@
 import requests
 import json
 
+import env_lab
+
+snow_host = env_lab.SNOW['host']
+snow_user = env_lab.SNOW['username']
+snow_pass = env_lab.SNOW['password']
+
+
 def get_user(email):
     # Set the request parameters
-    url = 'https://dev71924.service-now.com/api/now/v1/table/sys_user?sysparm_limit=1&email=%s' % email
-
-    # Eg. User name="admin", Password="admin" for this code sample.
-    user = 'admin'
-    pwd = 'devnetSNOW1'
+    url = 'https://%s/api/now/v1/table/sys_user?sysparm_limit=1&email=%s' % (snow_host, email)
 
     # Set proper headers
     headers = {"Content-Type": "application/json",
                "Accept": "application/json"}
 
     # Do the HTTP request
-    response = requests.get(url, auth=(user, pwd), headers=headers )
+    response = requests.get(url, auth=(snow_user, snow_pass), headers=headers)
 
     # Check for HTTP codes other than 200
     if response.status_code != 200:
@@ -30,18 +33,14 @@ def get_user(email):
 
 def get_group(name):
     # Set the request parameters
-    url = 'https://dev71924.service-now.com/api/now/table/sys_user_group?sysparm_limit=1&name=%s' % name
-
-    # Eg. User name="admin", Password="admin" for this code sample.
-    user = 'admin'
-    pwd = 'devnetSNOW1'
+    url = 'https://%s/api/now/table/sys_user_group?sysparm_limit=1&name=%s' % (snow_host, name)
 
     # Set proper headers
     headers = {"Content-Type": "application/json",
                "Accept": "application/json"}
 
     # Do the HTTP request
-    response = requests.get(url, auth=(user, pwd), headers=headers)
+    response = requests.get(url, auth=(snow_user, snow_pass), headers=headers)
 
     # Check for HTTP codes other than 200
     if response.status_code != 200:
@@ -55,11 +54,7 @@ def get_group(name):
 
 def create_incident(short_name, desc, impact, urgency, caller_email, assignment_group):
     # Set the request parameters
-    url = 'https://dev71924.service-now.com/api/now/v1/table/incident'
-
-    # Eg. User name="admin", Password="admin" for this code sample.
-    user = 'admin'
-    pwd = 'devnetSNOW1'
+    url = 'https://%s/api/now/v1/table/incident' % snow_host
 
     caller_id = get_user(caller_email)['sys_id']
     group_id = get_group(assignment_group)['sys_id']
@@ -76,7 +71,7 @@ def create_incident(short_name, desc, impact, urgency, caller_email, assignment_
                     "urgency": urgency}
 
     # Do the HTTP request
-    response = requests.post(url, auth=(user, pwd), headers=headers, data=json.dumps(request_date))
+    response = requests.post(url, auth=(snow_user, snow_pass), headers=headers, data=json.dumps(request_date))
 
     # Check for HTTP codes other than 200
     if response.status_code != 201:
