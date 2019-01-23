@@ -7,14 +7,18 @@ if __name__ == "__main__":
 
     # parse input options
     parser = argparse.ArgumentParser(description="Collect port details from DNA Center")
-    parser.add_argument('-e', '--email_destination', nargs='+', help='email to send report results')
     parser.add_argument('-s', '--status', nargs='+', help='port status')
     parser.add_argument('-t', '--type', nargs='+', help='port type')
-    parser.add_argument('-f', '--family', nargs='+', help="Family of device")
-    parser.add_argument('--servicenow', action='store_true', help='Create an incident in ServiceNow')
-    parser.add_argument('--print', action='store_true', help='Print to screen, do not send email')
+    parser.add_argument('-f', '--family', nargs='+', help="Family of device, Routers, Switches and Hubs")
+    group = parser.add_argument_group('Output Destination')
+    group.add_argument('--email_destination', nargs='+', help='Email report to provided destination')
+    group.add_argument('--servicenow', action='store_true', help='Create an incident in ServiceNow')
+    group.add_argument('--print', action='store_true', help='Print report to screen')
 
     args = parser.parse_args()
+
+    if not (args.email_destination or args.servicenow or args.print):
+        parser.error('At least 1 output destination is required.')
 
     port_status = args.status if args.status else []
     # Different ways to write if statements
