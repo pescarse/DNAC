@@ -54,6 +54,7 @@ if __name__ == "__main__":
         found_port_count += device_results['count']
     msg += 'Total port count: ' + str(found_port_count)
 
+    # Look at the outputs and handle accordingly
     if args.email_destination:
         email_message = create_message(args.email_destination, 'DNA Center Alert', message=msg)
         smtp_server = create_smtp_server()

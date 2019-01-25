@@ -1,8 +1,5 @@
-# Need to install requests package for python
-# easy_install requests
 import requests
 import json
-
 import env_lab
 
 snow_host = env_lab.SNOW['host']
@@ -44,7 +41,7 @@ def get_group(name):
 
     # Check for HTTP codes other than 200
     if response.status_code != 200:
-        print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:',response.json())
+        print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.json())
         return ""
 
     # Decode the JSON response into a dictionary and use the data
