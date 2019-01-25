@@ -89,7 +89,8 @@ def get_port_status(port_id, port_type, port_status):
     interfaces = get_url("interface/network-device/%s" % port_id)
 
     ports = interfaces['response']
-    result = "Port status:\r\n"
+    result_message = "Port status:\r\n"
+    filtered_count = 0
 
     if port_type.__len__() > 0:
         ports = [d for d in ports if d['portMode'] in port_type]
@@ -98,7 +99,11 @@ def get_port_status(port_id, port_type, port_status):
         ports = [d for d in ports if d['status'] in port_status]
 
     for interface in ports:
-        result += 'Port %s(%s) has a status of %s\r\n' % \
+        result_message += 'Port %s(%s) has a status of %s\r\n' % \
                   (interface['portName'], interface['portMode'], interface['status'])
 
-    return result
+    if ports.__len__() > 0:
+        filtered_count = ports.__len__()
+
+    return {'message': result_message,
+            'count': filtered_count}

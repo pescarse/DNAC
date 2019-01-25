@@ -38,16 +38,21 @@ if __name__ == "__main__":
     all_devices = dnac_helpers.list_network_devices()
     msg = ""
 
-    # filter out only Switches and Hubs
+    # filter out by family arg
     if family:
-        switches = [d for d in all_devices if d['family'] in family]
+        filtered_devices = [d for d in all_devices if d['family'] in family]
     else:
-        switches = all_devices
+        filtered_devices = all_devices
 
-    # build email message body with details ports of each switch
-    for this_switch in switches:
-        msg += "Details of " + this_switch['hostname'] + "\r\n"
-        msg += dnac_helpers.get_port_status(this_switch['id'], port_type, port_status) + "\r\n\n"
+    # build message body with details ports of each device
+    found_port_count = 0
+
+    for this_device in filtered_devices:
+        msg += "Details of " + this_device['hostname'] + "\r\n"
+        device_results = dnac_helpers.get_port_status(this_device['id'], port_type, port_status)
+        msg += device_results['message'] + "\r\n\n"
+        found_port_count += device_results['count']
+    msg += 'Total port count: ' + str(found_port_count)
 
     if args.email_destination:
         email_message = create_message(args.email_destination, 'DNA Center Alert', message=msg)
@@ -58,15 +63,17 @@ if __name__ == "__main__":
         print(msg)
 
     if args.servicenow:
-        new_incident = servicenow_helpers.create_incident(short_name='Down Trunk Ports Detected',
-                                                          desc=msg,
-                                                          impact=1,
-                                                          urgency=1,
-                                                          caller_email='ciscodnacenter@cisco.com',
-                                                          assignment_group='Network')
+        if found_port_count > 0:
+            new_incident = servicenow_helpers.create_incident(short_name='Cisco DNA port status report',
+                                                              desc=msg,
+                                                              impact=1,
+                                                              urgency=1,
+                                                              caller_email='ciscodnacenter@cisco.com',
+                                                              assignment_group='Network')
 
-        print('New Incident created: %s' % new_incident['number'])
-
+            print('New Incident created: %s' % new_incident['number'])
+        else:
+            print('No matching ports found, ServiceNow incident not needed.')
 
 
 
