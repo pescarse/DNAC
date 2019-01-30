@@ -38,6 +38,9 @@ if __name__ == "__main__":
     all_devices = dnac_helpers.list_network_devices()
     msg = ""
 
+    # filter out non family devices
+    all_devices = [d for d in all_devices if d['family'] is not None]
+
     # filter out by family arg
     if family:
         filtered_devices = [d for d in all_devices if d['family'] in family]
